@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="MeteoPoloNorteService"
+             targetNamespace="http://polonorte.beatlech/meteo"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:mt="http://polonorte.beatlech/meteo"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <types>
+    <xsd:schema targetNamespace="http://polonorte.beatlech/meteo" elementFormDefault="qualified">
+      <xsd:element name="ObtenerPronosticoRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="zona" type="xsd:string"/>
+            <xsd:element name="fecha" type="xsd:date"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ObtenerPronosticoResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="pronostico">
+              <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="DESPEJADO"/>
+                  <xsd:enumeration value="NEVADA_LEVE"/>
+                  <xsd:enumeration value="VENTISCA"/>
+                </xsd:restriction>
+              </xsd:simpleType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </types>
+  <message name="ObtenerPronosticoInput"><part name="parameters" element="mt:ObtenerPronosticoRequest"/></message>
+  <message name="ObtenerPronosticoOutput"><part name="parameters" element="mt:ObtenerPronosticoResponse"/></message>
+  <portType name="MeteoPortType">
+    <operation name="ObtenerPronostico">
+      <input message="mt:ObtenerPronosticoInput"/>
+      <output message="mt:ObtenerPronosticoOutput"/>
+    </operation>
+  </portType>
+  <binding name="MeteoBinding" type="mt:MeteoPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="ObtenerPronostico">
+      <soap:operation soapAction="ObtenerPronostico"/>
+      <input><soap:body use="literal"/></input>
+      <output><soap:body use="literal"/></output>
+    </operation>
+  </binding>
+  <service name="MeteoPoloNorteService">
+    <port name="MeteoPort" binding="mt:MeteoBinding">
+      <soap:address location="http://127.0.0.1:8089/meteo"/>
+    </port>
+  </service>
+</definitions>
